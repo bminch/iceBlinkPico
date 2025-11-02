@@ -30,7 +30,7 @@ module memory #(
 )(
     input logic     clk, 
     input logic     [2:0] funct3, 
-    input logic     dmem_wren, 
+    input logic     dmem_wren,  // always enabled for full word
     input logic     [31:0] dmem_address, 
     input logic     [31:0] dmem_data_in, 
     input logic     [31:0] imem_address, 
@@ -202,7 +202,7 @@ module memory #(
     );
 
     // Handle data memory reads / writes
-    assign is_leds = (dmem_address[31:2] == 30'h3FFFFFFF);
+    assign is_leds = (dmem_address[31:2] == 30'h3FFFFFFF); // all 1s except first 2 bits
     assign is_millis = (dmem_address[31:2] == 30'h3FFFFFFE);
     assign is_micros = (dmem_address[31:2] == 30'h3FFFFFFD);
     assign is_dmem = (dmem_address[31:12] == 20'd0);
@@ -212,7 +212,7 @@ module memory #(
     always_ff @(posedge clk) begin
         dmem_address1 <= dmem_address[1];
         dmem_address0 <= dmem_address[0];
-        dmem_word <= funct3[1];
+        dmem_word <= funct3[1]; // always halfword if funct3 is 010
         dmem_halfword <= funct3[0];
         dmem_unsigned <= funct3[2];
     end
@@ -430,7 +430,7 @@ module memory_array #(
 )(
     input logic     clk, 
     input logic     write_enable, 
-    input logic     [9:0] address, 
+    input logic     [9:0] address, // only takes in {0000 0000 00}00
     input logic     [7:0] data_in, 
     output logic    [7:0] data_out
 );

@@ -1,5 +1,12 @@
 `include "memory.sv"
 
+/*
+Basically, memory.sv is implemented complpetely for us already, using all the inputs and ouputs we have passed into memory module, implmement processing for each instruction sets
+
+We can manipulate dmem data in and out and what to write and the wren, as well as funct3 correspondingly. Colors are reflected as a result of all executions
+
+
+*/
 module top (
     input logic clk, 
     output logic LED, 
@@ -16,18 +23,19 @@ module top (
     localparam [3:0] BLUE       = 4'd5;
     localparam [3:0] MAGENTA    = 4'd6;
 
-    localparam [21:0] STATE_DWELL_CYCLES = 22'd3000000;
+    localparam [21:0] STATE_DWELL_CYCLES = 22'd3000000; // defines how long the FSM stays in one state
 
     logic [2:0] funct3 = 3'b010;
     logic dmem_wren = 1'b0;
     logic [31:0] dmem_address = 31'd0;
     logic [31:0] dmem_data_in = 31'd0;
     logic [31:0] dmem_data_out;
-    logic [31:0] imem_address = 31'h1000;
+    logic [31:0] imem_address = 31'h1000; // h means hex, 1 hex bit is 4 bits, .... 0001 0000 0000 0000
     logic [31:0] imem_data_out;
 
     logic reset;
     logic led;
+
     logic red;
     logic green;
     logic blue;
@@ -35,6 +43,7 @@ module top (
     logic [3:0] state = INIT;
     logic [21:0] count = 22'd0;
 
+    // increment instruction memory address by clock cycles
     always_ff @(negedge clk) begin
         imem_address <= imem_address + 1;
     end
@@ -44,7 +53,7 @@ module top (
             INIT: begin
                 dmem_address <= 32'hFFFFFFFC;
                 dmem_data_in <= 32'hFFFF0000;
-                dmem_wren <= 1'b1;
+                dmem_wren <= 1'b1; // always enabled for full word
                 count <= STATE_DWELL_CYCLES;
                 state <= RED;
             end
@@ -120,7 +129,7 @@ module top (
         .dmem_address   (dmem_address), 
         .dmem_data_in   (dmem_data_in), 
         .imem_address   (imem_address), 
-        .imem_data_out  (imem_data_out), 
+        .imem_data_out  (imem_data_out),  // the combined instruction memory data bitstrings
         .dmem_data_out  (dmem_data_out), 
         .reset          (reset), 
         .led            (led), 
@@ -129,6 +138,7 @@ module top (
         .blue           (blue)
     );
 
+    // LED and RGB PWM values are purely dmem_in_data because we are writing only full word
     assign LED = ~led;
     assign RGB_R = ~red;
     assign RGB_G = ~green;
