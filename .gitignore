@@ -1,0 +1,14 @@
+# Virtual environment
+venv/
+
+# Python bytecode
+__pycache__/
+*.py[cod]
+
+# Compiled Python files
+*.pyc
+
+# Build directory
+sim_build/
+
+*.xml
