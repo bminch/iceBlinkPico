@@ -127,7 +127,7 @@ module top (
         .funct3         (funct3), 
         .dmem_wren      (dmem_wren), 
         .dmem_address   (dmem_address), 
-        .dmem_data_in   (dmem_data_in), 
+        .dmem_data_in   (dmem_data_in), // LEDs and RGBs are displaying this value, what is being written into the dmem
         .imem_address   (imem_address), 
         .imem_data_out  (imem_data_out),  // the combined instruction memory data bitstrings
         .dmem_data_out  (dmem_data_out), 
