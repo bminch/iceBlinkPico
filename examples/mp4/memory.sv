@@ -30,7 +30,7 @@ module memory #(
 )(
     input logic     clk, 
     input logic     [2:0] funct3, 
-    input logic     dmem_wren,  // always enabled for full word
+    input logic     dmem_wren,
     input logic     [31:0] dmem_address, 
     input logic     [31:0] dmem_data_in, 
     input logic     [31:0] imem_address, 

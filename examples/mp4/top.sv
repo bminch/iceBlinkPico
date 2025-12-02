@@ -1,11 +1,11 @@
 `include "memory.sv"
+`include "PC.sv"
+`include "Register_File.sv"
 
 /*
 Basically, memory.sv is implemented complpetely for us already, using all the inputs and ouputs we have passed into memory module, implmement processing for each instruction sets
 
 We can manipulate dmem data in and out and what to write and the wren, as well as funct3 correspondingly. Colors are reflected as a result of all executions
-
-
 */
 module top (
     input logic clk, 
@@ -31,7 +31,7 @@ module top (
     logic [31:0] dmem_data_in = 31'd0;
     logic [31:0] dmem_data_out;
     logic [31:0] imem_address = 31'h1000; // h means hex, 1 hex bit is 4 bits, .... 0001 0000 0000 0000
-    logic [31:0] imem_data_out;
+    logic [31:0] imem_data_out; // IR (instruction register) storing instructions for future output
 
     logic reset;
     logic led;
@@ -43,92 +43,104 @@ module top (
     logic [3:0] state = INIT;
     logic [21:0] count = 22'd0;
 
-    // increment instruction memory address by clock cycles
-    always_ff @(negedge clk) begin
-        imem_address <= imem_address + 1;
-    end
-
-    always_ff @(negedge clk) begin
+    always_ff @(posedge clk) begin
         case (state)
-            INIT: begin
-                dmem_address <= 32'hFFFFFFFC;
-                dmem_data_in <= 32'hFFFF0000;
-                dmem_wren <= 1'b1; // always enabled for full word
-                count <= STATE_DWELL_CYCLES;
-                state <= RED;
-            end
-            RED: begin
-                if (count > 22'd0) begin
-                    count <= count - 1;
-                end
-                else begin
-                    dmem_data_in <= 32'hFFFFFF00;
-                    count <= STATE_DWELL_CYCLES;
-                    state <= YELLOW;
-                end
-            end
-            YELLOW: begin
-                if (count > 22'd0) begin
-                    count <= count - 1;
-                end
-                else begin
-                    dmem_data_in <= 32'hFF00FF00;
-                    count <= STATE_DWELL_CYCLES;
-                    state <= GREEN;
-                end
-            end
-            GREEN: begin
-                if (count > 22'd0) begin
-                    count <= count - 1;
-                end
-                else begin
-                    dmem_data_in <= 32'h0000FFFF;
-                    count <= STATE_DWELL_CYCLES;
-                    state <= CYAN;
-                end
-            end
-            CYAN: begin
-                if (count > 22'd0) begin
-                    count <= count - 1;
-                end
-                else begin
-                    dmem_data_in <= 32'h000000FF;
-                    count <= STATE_DWELL_CYCLES;
-                    state <= BLUE;
-                end
-            end
-            BLUE: begin
-                if (count > 22'd0) begin
-                    count <= count - 1;
-                end
-                else begin
-                    dmem_data_in <= 32'h00FF00FF;
-                    count <= STATE_DWELL_CYCLES;
-                    state <= MAGENTA;
-                end
-            end
-            MAGENTA: begin
-                if (count > 22'd0) begin
-                    count <= count - 1;
-                end
-                else begin
-                    dmem_data_in <= 32'hFFFF0000;
-                    count <= STATE_DWELL_CYCLES;
-                    state <= RED;
-                end
-            end
+
         endcase
     end
 
+    // Signals for later (later in Control Unit)
+    logic IRWrite, ImmSrc, AdrSrc, PCWrite, MemWrite;
+    logic [1:0] ALUSrcA, ResultSrc, ALUSrcB;
+    logic [2:0] ALUControl;
+
+    // Wires, non-architectural 
+    logic [31:0] Instr, A, RD1, RD2, ImmExt, ALUResult, ALUOut, Adr, Data, Result, ALUSrcA_out, ALUSrcB_out, WriteData;
+
+
+
+    PC pc (
+        .clk    (clk),
+        .PCWrite(PCWrite),
+        .PC_in  (Result), // PCNext, advanced by +4 every time
+        .PC_out (imem_address)
+    )
+
+    Mux3_to_1 Mux_ALUSrcA (
+        .sel(ALUSrcA),
+        .A(imem_address),
+        .B(),
+        .C(A),
+        .Mux3_to_1_out(ALUSrcA_out)
+    );
+    Mux3_to_1 Mux_ALUSrcB (
+        .sel(ALUSrcB),
+        .A(),
+        .B(ImmExt),
+        .C(4),
+        .Mux3_to_1_out(ALUSrcB_out)
+    );
+
+    Mux2_to_1 Mux_AdrSrc (
+        .sel(AdrSrc),
+        .A(imem_address),
+        .B(ALUOut),
+        .Mux2_to_1_out(Adr)
+    );
+
+    Register_File Reg_File (
+        .clk (clk),
+        .WE3 (),
+        .A1 (Instr[19:15]),
+        .A2 (Instr[24:20]),
+        .A3 (Instr[11:7]),
+        .WD3 (Result),
+        .RD1 (RD1),
+        .RD2 (RD2)
+    );
+
+    always_ff @(posedge clk)begin 
+        A <= RD1;
+        WriteData <= RD2;
+    end
+
+    Extend Extend (
+        .in(Instr[31:7]),
+        .ImmSrc(ImmSrc),
+        .ImmExt (ImmExt)
+    );
+
+    ALU ALU (
+        .SrcA(ALUSrcA_out),
+        .SrcB(ALUSrcB_out),
+        .ALUControl(ALUControl),
+        .ALUResult(ALUResult),
+    );
+
+    always_ff @(posedge clk)begin 
+        ALUOut <= ALUResult;
+    end
+
+    
+    Mux3_to_1 Mux_ResultSrc (
+        .sel(ResultSrc),
+        .A(ALUOut),
+        .B(Data),
+        .C(ALUResult),
+        .Mux3_to_1_out(Result)
+    );
+
+
+
     memory #(
         .IMEM_INIT_FILE_PREFIX  ("rv32i_test")
-    ) u1 (
+    ) mem (
         .clk            (clk), 
         .funct3         (funct3), 
-        .dmem_wren      (dmem_wren), 
+        .dmem_wren      (MemWrite), 
         .dmem_address   (dmem_address), 
-        .dmem_data_in   (dmem_data_in), // LEDs and RGBs are displaying this value, what is being written into the dmem
-        .imem_address   (imem_address), 
+        .dmem_data_in   (WriteData), // LEDs and RGBs are displaying this value, what is being written into the dmem
+        .imem_address   (Adr), 
         .imem_data_out  (imem_data_out),  // the combined instruction memory data bitstrings
         .dmem_data_out  (dmem_data_out), 
         .reset          (reset), 
@@ -137,6 +149,23 @@ module top (
         .green          (green), 
         .blue           (blue)
     );
+
+    always_ff @(posedge clk) begin
+        if (IRWrite) begin
+            Instr <= imem_address; 
+        end
+        // TODO: an else?
+    end
+
+    always_ff @(posedge clk) begin
+        Data <= imem_address;
+    end
+    
+
+
+
+
+
 
     // LED and RGB PWM values are purely dmem_in_data because we are writing only full word
     assign LED = ~led;
