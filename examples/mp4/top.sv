@@ -7,6 +7,13 @@ Basically, memory.sv is implemented complpetely for us already, using all the in
 
 We can manipulate dmem data in and out and what to write and the wren, as well as funct3 correspondingly. Colors are reflected as a result of all executions
 */
+
+/*
+
+Instructions currently supported: lw, sw, 
+
+
+*/
 module top (
     input logic clk, 
     output logic LED, 
@@ -50,12 +57,12 @@ module top (
     end
 
     // Signals for later (later in Control Unit)
-    logic IRWrite, ImmSrc, AdrSrc, PCWrite, MemWrite;
+    logic IRWrite, ImmSrc, AdrSrc, PCWrite, MemWrite, RegWrite;
     logic [1:0] ALUSrcA, ResultSrc, ALUSrcB;
     logic [2:0] ALUControl;
 
     // Wires, non-architectural 
-    logic [31:0] Instr, A, RD1, RD2, ImmExt, ALUResult, ALUOut, Adr, Data, Result, ALUSrcA_out, ALUSrcB_out, WriteData;
+    logic [31:0] Instr, A, RD1, RD2, RD2_out, ImmExt, ALUResult, ALUOut, Adr, Data, Result, ALUSrcA_out, ALUSrcB_out, WriteData, OldPC;
 
 
 
@@ -69,13 +76,13 @@ module top (
     Mux3_to_1 Mux_ALUSrcA (
         .sel(ALUSrcA),
         .A(imem_address),
-        .B(),
+        .B(OldPC),
         .C(A),
         .Mux3_to_1_out(ALUSrcA_out)
     );
     Mux3_to_1 Mux_ALUSrcB (
         .sel(ALUSrcB),
-        .A(),
+        .A(RD2_out),
         .B(ImmExt),
         .C(4),
         .Mux3_to_1_out(ALUSrcB_out)
@@ -90,7 +97,7 @@ module top (
 
     Register_File Reg_File (
         .clk (clk),
-        .WE3 (),
+        .WE3 (RegWrite),
         .A1 (Instr[19:15]),
         .A2 (Instr[24:20]),
         .A3 (Instr[11:7]),
@@ -102,6 +109,7 @@ module top (
     always_ff @(posedge clk)begin 
         A <= RD1;
         WriteData <= RD2;
+        RD2_out <= RD2;
     end
 
     Extend Extend (
@@ -152,13 +160,13 @@ module top (
 
     always_ff @(posedge clk) begin
         if (IRWrite) begin
-            Instr <= imem_address; 
+            Instr <= imem_data_out; 
+            OldPC <= imem_address;
         end
-        // TODO: an else?
     end
 
     always_ff @(posedge clk) begin
-        Data <= imem_address;
+        Data <= imem_data_out;
     end
     
 
