@@ -5,6 +5,7 @@ module mp4_tb;
 
     logic clk = 0;
     logic LED, RGB_R, RGB_G, RGB_B;
+    integer i;
 
 
     top u0 (
@@ -55,6 +56,10 @@ module mp4_tb;
         $dumpvars(0, u0.Reg_File.Registers[30]);
         $dumpvars(0, u0.Reg_File.Registers[31]);
         #100000
+        $display("\n=== Final Register Values ===");
+        for (i = 1; i <= 23; i = i + 1) begin
+            $display("x%0d = %0d (0x%08h)", i, u0.Reg_File.Registers[i], u0.Reg_File.Registers[i]);
+        end
         $finish;
     end
 
