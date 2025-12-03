@@ -18,17 +18,17 @@ module ControlUnit (
 
 
     // Define state variable values
-    localparam logic [3:0] FETCH      = 4'd0;
-    localparam logic [3:0] DECODE     = 4'd1;
-    localparam logic [3:0] MEM_ADR    = 4'd2;
-    localparam logic [3:0] MEM_READ   = 4'd3;
-    localparam logic [3:0] MEM_WB     = 4'd4;
-    localparam logic [3:0] MEM_WRITE  = 4'd5;
-    localparam logic [3:0] EXECUTE_R  = 4'd6;
-    localparam logic [3:0] ALU_WB     = 4'd7;
-    localparam logic [3:0] BEQ        = 4'd8;
-    localparam logic [3:0] JAL        = 4'd9;
-    localparam logic [3:0] EXECUTEL   = 4'd10;
+    localparam [3:0] FETCH      = 4'd0;
+    localparam [3:0] DECODE     = 4'd1;
+    localparam [3:0] MEM_ADR    = 4'd2;
+    localparam [3:0] MEM_READ   = 4'd3;
+    localparam [3:0] MEM_WB     = 4'd4;
+    localparam [3:0] MEM_WRITE  = 4'd5;
+    localparam [3:0] EXECUTE_R  = 4'd6;
+    localparam [3:0] ALU_WB     = 4'd7;
+    localparam [3:0] BEQ        = 4'd8;
+    localparam [3:0] JAL        = 4'd9;
+    localparam [3:0] EXECUTEL   = 4'd10;
 
     // intermediate wires in the Control Unit
     logic Branch;
@@ -58,7 +58,7 @@ otherwise, they are 0.
         PCUpdate = 0;
         ALUOp = 0;
 
-        next_state = 2'bxx;
+        next_state = 0;
         case (current_state)
             FETCH: begin
                 AdrSrc = 0;

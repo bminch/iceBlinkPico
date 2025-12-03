@@ -32,6 +32,7 @@ jal
 */
 module top (
     input logic clk, 
+    input logic resetPC,
     output logic LED, 
     output logic RGB_R, 
     output logic RGB_G, 
@@ -49,14 +50,13 @@ module top (
     // localparam [21:0] STATE_DWELL_CYCLES = 22'd3000000; // defines how long the FSM stays in one state
 
     // logic [2:0] funct3 = 3'b010;
-    logic dmem_wren = 1'b0;
-    logic [31:0] dmem_address = 31'd0;
-    logic [31:0] dmem_data_in = 31'd0;
+    // logic dmem_wren = 1'b0;
+    // logic [31:0] dmem_address = 31'd0;
+    // logic [31:0] dmem_data_in = 31'd0;
     logic [31:0] dmem_data_out;
     logic [31:0] imem_address;     // = 31'h1000; // h means hex, 1 hex bit is 4 bits, .... 0001 0000 0000 0000
     logic [31:0] imem_data_out; // IR (instruction register) storing instructions for future output
 
-    logic reset;
     logic led;
 
     logic red;
@@ -89,6 +89,7 @@ module top (
 
     PC pc (
         .clk    (clk),
+        .resetPC  (resetPC),
         .PCWrite(PCWrite),
         .PC_in  (Result), // PCNext, advanced by +4 every time
         .PC_out (imem_address)
