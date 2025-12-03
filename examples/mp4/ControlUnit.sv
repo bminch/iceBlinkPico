@@ -18,15 +18,17 @@ module ControlUnit (
 
 
     // Define state variable values
-    localparam FETCH = 
-    localparam DECODE = 
-    localparam MEM_ADR = 
-    localparam MEM_READ =
-    localparam MEM_WB = 
-    localparam MEM_WRITE = 
-    localparam EXECUTE_R = 
-    localparam ALU_WB = 
-    localparam BEQ = 
+    localparam logic [3:0] FETCH      = 4'd0;
+    localparam logic [3:0] DECODE     = 4'd1;
+    localparam logic [3:0] MEM_ADR    = 4'd2;
+    localparam logic [3:0] MEM_READ   = 4'd3;
+    localparam logic [3:0] MEM_WB     = 4'd4;
+    localparam logic [3:0] MEM_WRITE  = 4'd5;
+    localparam logic [3:0] EXECUTE_R  = 4'd6;
+    localparam logic [3:0] ALU_WB     = 4'd7;
+    localparam logic [3:0] BEQ        = 4'd8;
+    localparam logic [3:0] JAL        = 4'd9;
+    localparam logic [3:0] EXECUTEL   = 4'd10;
 
     // intermediate wires in the Control Unit
     logic Branch;
@@ -34,8 +36,8 @@ module ControlUnit (
     logic [1:0] ALUOp;
 
     // Declare state variables
-    logic [1:0] current_state = FETCH; // starts with FETCH
-    logic [1:0] next_state;
+    logic [3:0] current_state = FETCH; // starts with FETCH
+    logic [3:0] next_state;
 
 /*
 Enable signals (RegWrite, MemWrite,
@@ -58,16 +60,16 @@ otherwise, they are 0.
                 ALUSrcA = 2'b01;
                 ALUSrcB = 2'b01;
                 ALUOp = 2'b00;
-                // lw and sw
-                if (op == 7'b0000011 || op == 7'b0100011) begin
-                    next_state = MEM_ADR;
-                end
-                else if(op == 7'b0110011) begin // R Type
-                    next_state = EXECUTE_R;
-                end
-                else if(op == 7'b1100011) begin // beq
-                    next_state = BEQ;
-                end
+                // use case instead of if/else
+                case (op)
+                    7'b0000011: next_state = MEM_ADR;   // lw
+                    7'b0100011: next_state = MEM_ADR;   // sw
+                    7'b0110011: next_state = EXECUTE_R; // R-type
+                    7'b1100011: next_state = BEQ;       // beq
+                    7'b0010011: next_state = EXECUTEL;  // I-type ALU (addi, etc.)
+                    7'b1101111: next_state = JAL;       // jal
+                    // no default to preserve original behavior
+                endcase
             MEM_ADR:
                 ALUSrcA = 2'b10;
                 ALUSrcB = 2'b01;
@@ -104,7 +106,6 @@ otherwise, they are 0.
             ALU_WB:
                 ResultSrc = 2'b00;
                 RegWrite = 1;
-
                 next_state = FETCH;
 
             BEQ:
@@ -113,6 +114,18 @@ otherwise, they are 0.
                 ALUOp = 2'b01;
                 ResultSrc = 2'b00;
                 next_state = FETCH;
+            EXECUTEL:
+                ALUSrcA = 2'b10;
+                ALUSrcB = 2'b01;
+                ALUOp = 2'b10;
+                next_state = ALU_WB;
+            JAL:
+                ALUSrcA = 2'b01;
+                ALUSrcB = 2'b10;
+                ALUOp = 2'b00;
+                ResultSrc = 2'b00;
+                PCUpdate = 1;
+                next_state = ALU_WB;
         endcase
     end
 
