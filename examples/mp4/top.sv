@@ -1,6 +1,12 @@
 `include "memory.sv"
 `include "PC.sv"
 `include "Register_File.sv"
+`include "ALU.sv"
+`include "Extend.sv"
+`include "ControlUnit.sv"
+`include "Mux2_to_1.sv"
+`include "Mux3_to_1.sv"
+
 
 /*
 Basically, memory.sv is implemented complpetely for us already, using all the inputs and ouputs we have passed into memory module, implmement processing for each instruction sets
@@ -50,29 +56,33 @@ module top (
     logic [3:0] state = INIT;
     logic [21:0] count = 22'd0;
 
-    always_ff @(posedge clk) begin
-        case (state)
-
-        endcase
-    end
-
-    // Signals for later (later in Control Unit)
-    logic IRWrite, AdrSrc, PCWrite, MemWrite, RegWrite, Zero;
-    logic [1:0] ImmSrc, ALUSrcA, ResultSrc, ALUSrcB;
-    logic [2:0] ALUControl;
-
     // Wires, non-architectural 
     logic [31:0] Instr, A, RD1, RD2, RD2_out, ImmExt, ALUResult, ALUOut, Adr, Data, Result, ALUSrcA_out, ALUSrcB_out, WriteData, OldPC;
 
-
-
+    ControlUnit ControlUnit (
+        .clk       (clk),
+        .op        (Instr[6:0]),
+        .funct3    (Instr[14:12]),
+        .funct7    (Instr[30]),
+        .Zero      (Zero),
+        .PCWrite   (PCWrite),
+        .AdrSrc    (AdrSrc),
+        .MemWrite  (MemWrite),
+        .IRWrite   (IRWrite),
+        .ResultSrc (ResultSrc),
+        .ALUControl(ALUControl),
+        .ALUSrcA   (ALUSrcA),
+        .ALUSrcB   (ALUSrcB),
+        .ImmSrc    (ImmSrc),
+        .RegWrite  (RegWrite)
+    );
 
     PC pc (
         .clk    (clk),
         .PCWrite(PCWrite),
         .PC_in  (Result), // PCNext, advanced by +4 every time
         .PC_out (imem_address)
-    )
+    );
 
     Mux3_to_1 Mux_ALUSrcA (
         .sel(ALUSrcA),
