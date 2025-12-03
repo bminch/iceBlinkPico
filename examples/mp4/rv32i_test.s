@@ -1,4 +1,7 @@
 addi x1, x0, 1 # 0x00100093
+ addi x2, x1, 2          #. 0x00208113
+
+
     lui x1, 0xFEDCC         # pc = 0x00, x1 = 0xFEDCC000
     addi x1, x1, 0xA98      # pc = 0x04, x1 = 0xFEDCBA98
     srli x2, x1, 4          # pc = 0x08, x2 = 0x0FEDCBA9
