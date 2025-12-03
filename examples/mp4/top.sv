@@ -10,7 +10,7 @@ We can manipulate dmem data in and out and what to write and the wren, as well a
 
 /*
 
-Instructions currently supported: lw, sw, 
+Instructions currently supported: lw, sw, beq (R Type)
 
 
 */
@@ -57,12 +57,13 @@ module top (
     end
 
     // Signals for later (later in Control Unit)
-    logic IRWrite, ImmSrc, AdrSrc, PCWrite, MemWrite, RegWrite;
+    logic IRWrite, ImmSrc, AdrSrc, PCWrite, MemWrite, RegWrite, Zero;
     logic [1:0] ALUSrcA, ResultSrc, ALUSrcB;
     logic [2:0] ALUControl;
 
     // Wires, non-architectural 
     logic [31:0] Instr, A, RD1, RD2, RD2_out, ImmExt, ALUResult, ALUOut, Adr, Data, Result, ALUSrcA_out, ALUSrcB_out, WriteData, OldPC;
+
 
 
 
@@ -122,6 +123,7 @@ module top (
         .SrcA(ALUSrcA_out),
         .SrcB(ALUSrcB_out),
         .ALUControl(ALUControl),
+        .Zero (Zero),
         .ALUResult(ALUResult),
     );
 
