@@ -16,7 +16,17 @@ We can manipulate dmem data in and out and what to write and the wren, as well a
 
 /*
 
-Instructions currently supported: lw, sw, beq (R Type)
+Instructions currently supported: 
+
+lw
+sw
+beq
+addi
+andi
+ori
+slti
+jal
+
 
 
 */
@@ -38,7 +48,7 @@ module top (
 
     localparam [21:0] STATE_DWELL_CYCLES = 22'd3000000; // defines how long the FSM stays in one state
 
-    logic [2:0] funct3 = 3'b010;
+    // logic [2:0] funct3 = 3'b010;
     logic dmem_wren = 1'b0;
     logic [31:0] dmem_address = 31'd0;
     logic [31:0] dmem_data_in = 31'd0;
@@ -156,7 +166,7 @@ module top (
         .IMEM_INIT_FILE_PREFIX  ("rv32i_test")
     ) mem (
         .clk            (clk), 
-        .funct3         (funct3), 
+        .funct3         (Instr[14:12]), // funct3
         .dmem_wren      (MemWrite), 
         .dmem_address   (dmem_address), 
         .dmem_data_in   (WriteData), // LEDs and RGBs are displaying this value, what is being written into the dmem
