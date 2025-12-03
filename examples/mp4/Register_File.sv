@@ -14,7 +14,7 @@ module Register_File (
 
     initial begin
         for (int k = 0; k < 32; k++) begin
-            Registers[k] <= 32'd0;
+            Registers[k] = 32'd0;
         end
     end
 

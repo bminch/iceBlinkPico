@@ -28,7 +28,7 @@ module ControlUnit (
     localparam [3:0] ALU_WB     = 4'd7;
     localparam [3:0] BEQ        = 4'd8;
     localparam [3:0] JAL        = 4'd9;
-    localparam [3:0] EXECUTEL   = 4'd10;
+    localparam [3:0] EXECUTE_I   = 4'd10;
 
     // intermediate wires in the Control Unit
     logic Branch;
@@ -57,7 +57,9 @@ otherwise, they are 0.
         RegWrite = 0;
         PCUpdate = 0;
         ALUOp = 0;
+        Branch = 0;
 
+        // has to be 0 for the beginning since all other variables might not be initialized yet
         next_state = 0;
         case (current_state)
             FETCH: begin
@@ -80,7 +82,7 @@ otherwise, they are 0.
                     7'b0100011: next_state = MEM_ADR;   // sw
                     7'b0110011: next_state = EXECUTE_R; // R-type
                     7'b1100011: next_state = BEQ;       // beq
-                    7'b0010011: next_state = EXECUTEL;  // I-type ALU (addi, etc.)
+                    7'b0010011: next_state = EXECUTE_I;  // I-type ALU (addi, etc.)
                     7'b1101111: next_state = JAL;       // jal
                     // no default to preserve original behavior
                 endcase
@@ -129,9 +131,10 @@ otherwise, they are 0.
                 ALUSrcB = 2'b00;
                 ALUOp = 2'b01;
                 ResultSrc = 2'b00;
+                Branch = 1;
                 next_state = FETCH;
             end
-            EXECUTEL: begin
+            EXECUTE_I: begin
                 ALUSrcA = 2'b10;
                 ALUSrcB = 2'b01;
                 ALUOp = 2'b10;
@@ -176,6 +179,15 @@ otherwise, they are 0.
     end
 
     // Instr Decoder
-    assign ImmSrc = op;
+    always_comb begin
+        case (op)
+            7'b0000011: ImmSrc = 2'b00; // lw
+            7'b0010011: ImmSrc = 2'b00; // I-type (load, ALU immediate)
+            7'b0100011: ImmSrc = 2'b01; // S-type (store)
+            7'b1100011: ImmSrc = 2'b10; // B-type (branch)
+            7'b1101111: ImmSrc = 2'b11; // J-type (jal)
+            default:    ImmSrc = 2'b00; // default to I-type
+        endcase
+    end
 
 endmodule

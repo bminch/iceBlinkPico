@@ -32,7 +32,6 @@ jal
 */
 module top (
     input logic clk, 
-    input logic resetPC,
     output logic LED, 
     output logic RGB_R, 
     output logic RGB_G, 
@@ -58,6 +57,7 @@ module top (
     logic [31:0] imem_data_out; // IR (instruction register) storing instructions for future output
 
     logic led;
+    logic reset;
 
     logic red;
     logic green;
@@ -67,6 +67,9 @@ module top (
     // logic [21:0] count = 22'd0;
 
     // Wires, non-architectural 
+    logic IRWrite, AdrSrc, PCWrite, MemWrite, RegWrite, Zero;
+    logic [1:0] ImmSrc, ALUSrcA, ResultSrc, ALUSrcB;
+    logic [2:0] ALUControl;
     logic [31:0] Instr, A, RD1, RD2, RD2_out, ImmExt, ALUResult, ALUOut, Adr, Data, Result, ALUSrcA_out, ALUSrcB_out, WriteData, OldPC;
 
     ControlUnit ControlUnit (
@@ -89,7 +92,6 @@ module top (
 
     PC pc (
         .clk    (clk),
-        .resetPC  (resetPC),
         .PCWrite(PCWrite),
         .PC_in  (Result), // PCNext, advanced by +4 every time
         .PC_out (imem_address)
