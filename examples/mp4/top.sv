@@ -161,17 +161,17 @@ module top (
     );
 
 
-
+    // imem and dmem are being read at the same time always, but only one is being used at a time
     memory #(
         .IMEM_INIT_FILE_PREFIX  ("rv32i_test")
     ) mem (
         .clk            (clk), 
         .funct3         (Instr[14:12]), // funct3
         .dmem_wren      (MemWrite), 
-        .dmem_address   (dmem_address), 
+        .dmem_address   (Adr), 
         .dmem_data_in   (WriteData), // LEDs and RGBs are displaying this value, what is being written into the dmem
         .imem_address   (Adr), 
-        .imem_data_out  (imem_data_out),  // the combined instruction memory data bitstrings
+        .imem_data_out  (imem_data_out), 
         .dmem_data_out  (dmem_data_out), 
         .reset          (reset), 
         .led            (led), 
@@ -188,7 +188,7 @@ module top (
     end
 
     always_ff @(posedge clk) begin
-        Data <= imem_data_out;
+        Data <= dmem_data_out;
     end
     
 
