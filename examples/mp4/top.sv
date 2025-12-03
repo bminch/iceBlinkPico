@@ -57,8 +57,8 @@ module top (
     end
 
     // Signals for later (later in Control Unit)
-    logic IRWrite, ImmSrc, AdrSrc, PCWrite, MemWrite, RegWrite, Zero;
-    logic [1:0] ALUSrcA, ResultSrc, ALUSrcB;
+    logic IRWrite, AdrSrc, PCWrite, MemWrite, RegWrite, Zero;
+    logic [1:0] ImmSrc, ALUSrcA, ResultSrc, ALUSrcB;
     logic [2:0] ALUControl;
 
     // Wires, non-architectural 
