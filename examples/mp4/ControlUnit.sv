@@ -119,11 +119,7 @@ otherwise, they are 0.
     always_ff @(posedge clk)
         current_state <= next_state;
 
-    always_comb begin
-        if PCUpdate || (Branch && Zero) begin
-            PCWrite = 1;
-        end
-    end
+    assign PCWrite = Branch & Zero | PCUpdate;
 
     // ALU Decoder (same as single cycle)
     logic RtypeSub;
@@ -148,9 +144,6 @@ otherwise, they are 0.
     end
 
     // Instr Decoder
-    always_comb begin
-        ImmSrc = op;
-    end
-
+    assign ImmSrc = op;
 
 endmodule
