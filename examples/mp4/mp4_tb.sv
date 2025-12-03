@@ -18,7 +18,7 @@ module mp4_tb;
     initial begin
         $dumpfile("mp4.vcd");
         $dumpvars(0, mp4_tb);
-        #100000
+        #1000000
         $finish;
     end
 

@@ -3,7 +3,7 @@ module ControlUnit (
     input logic [6:0]  op,
     input logic [2:0]  funct3,
     input logic        funct7,
-    input logic        Zero
+    input logic        Zero,
     output logic        PCWrite,
     output logic        AdrSrc,
     output logic        MemWrite,
@@ -13,7 +13,7 @@ module ControlUnit (
     output logic [1:0]  ALUSrcA,
     output logic [1:0]  ALUSrcB,
     output logic [1:0]  ImmSrc,
-    output logic        RegWrite,
+    output logic        RegWrite
 );
 
 
@@ -44,10 +44,23 @@ Enable signals (RegWrite, MemWrite,
 IRWrite, PCUpdate, and Branch) are listed only when they are asserted;
 otherwise, they are 0.
 */
+
     always_comb begin
+        // all values need to always be explicitly defined inside of a combinational
+        AdrSrc = 0;
+        MemWrite = 0;
+        IRWrite = 0;
+        ResultSrc = 0;
+        ALUControl = 0;
+        ALUSrcA = 0;
+        ALUSrcB = 0;
+        RegWrite = 0;
+        PCUpdate = 0;
+        ALUOp = 0;
+
         next_state = 2'bxx;
         case (current_state)
-            FETCH:
+            FETCH: begin
                 AdrSrc = 0;
                 IRWrite = 1;
                 ALUSrcA = 2'b00;
@@ -56,7 +69,8 @@ otherwise, they are 0.
                 ResultSrc = 2'b10;
                 PCUpdate = 1;
                 next_state = DECODE;
-            DECODE:
+            end
+            DECODE: begin
                 ALUSrcA = 2'b01;
                 ALUSrcB = 2'b01;
                 ALUOp = 2'b00;
@@ -70,7 +84,8 @@ otherwise, they are 0.
                     7'b1101111: next_state = JAL;       // jal
                     // no default to preserve original behavior
                 endcase
-            MEM_ADR:
+            end
+            MEM_ADR: begin
                 ALUSrcA = 2'b10;
                 ALUSrcB = 2'b01;
                 ALUOp = 2'b00;
@@ -79,53 +94,57 @@ otherwise, they are 0.
                     next_state = MEM_READ;
                 end
                 else if( op == 7'b0100011) begin
-                    next_state = MEM_WRITE
+                    next_state = MEM_WRITE;
                 end
-            MEM_READ:
+            end
+            MEM_READ: begin
                 ResultSrc = 2'b00;
                 AdrSrc = 1;
                 next_state = MEM_WB;
-
-            MEM_WB:
+            end
+            MEM_WB: begin
                 ResultSrc = 2'b01;
                 RegWrite = 1;
                 next_state = FETCH;
-
-            MEM_WRITE:
+            end
+            MEM_WRITE: begin
                 ResultSrc = 2'b00;
                 AdrSrc = 1;
                 MemWrite = 1;
                 next_state = FETCH;
-
-            EXECUTE_R:
+            end
+            EXECUTE_R: begin
                 ALUSrcA = 2'b10;
                 ALUSrcB = 2'b00;
                 ALUOp = 2'b10;
                 next_state = ALU_WB;
-
-            ALU_WB:
+            end
+            ALU_WB: begin
                 ResultSrc = 2'b00;
                 RegWrite = 1;
                 next_state = FETCH;
-
-            BEQ:
+            end
+            BEQ: begin
                 ALUSrcA = 2'b10;
                 ALUSrcB = 2'b00;
                 ALUOp = 2'b01;
                 ResultSrc = 2'b00;
                 next_state = FETCH;
-            EXECUTEL:
+            end
+            EXECUTEL: begin
                 ALUSrcA = 2'b10;
                 ALUSrcB = 2'b01;
                 ALUOp = 2'b10;
                 next_state = ALU_WB;
-            JAL:
+            end
+            JAL: begin
                 ALUSrcA = 2'b01;
                 ALUSrcB = 2'b10;
                 ALUOp = 2'b00;
                 ResultSrc = 2'b00;
                 PCUpdate = 1;
                 next_state = ALU_WB;
+            end
         endcase
     end
 

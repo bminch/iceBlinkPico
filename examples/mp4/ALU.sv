@@ -4,10 +4,12 @@ module ALU (
     input  logic [31:0] SrcB,
     input  logic [2:0]  ALUControl,
     output logic Zero,
-    output logic [31:0] ALUResult,
+    output logic [31:0] ALUResult
 );
 
 always_comb begin
+    ALUResult = 32'b0;
+    Zero = 0;
     case (ALUControl)
         3'b000: begin
             ALUResult = SrcA + SrcB;
@@ -22,7 +24,9 @@ always_comb begin
                 Zero = 0;
             end
         end
-        default: ALUResult = 32'b0;
+        // and, or, slt
+        default: begin
+        end
     endcase
 end
 

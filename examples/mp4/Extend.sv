@@ -1,7 +1,7 @@
 module Extend (
     input logic [31:7] in,
     input logic [1:0] ImmSrc,
-    output logic [31:0] ImmExt,
+    output logic [31:0] ImmExt
 );
 
     always_comb begin

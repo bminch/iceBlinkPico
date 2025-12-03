@@ -38,22 +38,22 @@ module top (
     output logic RGB_B
 );
 
-    localparam [3:0] INIT       = 4'd0;
-    localparam [3:0] RED        = 4'd1;
-    localparam [3:0] YELLOW     = 4'd2;
-    localparam [3:0] GREEN      = 4'd3;
-    localparam [3:0] CYAN       = 4'd4;
-    localparam [3:0] BLUE       = 4'd5;
-    localparam [3:0] MAGENTA    = 4'd6;
+    // localparam [3:0] INIT       = 4'd0;
+    // localparam [3:0] RED        = 4'd1;
+    // localparam [3:0] YELLOW     = 4'd2;
+    // localparam [3:0] GREEN      = 4'd3;
+    // localparam [3:0] CYAN       = 4'd4;
+    // localparam [3:0] BLUE       = 4'd5;
+    // localparam [3:0] MAGENTA    = 4'd6;
 
-    localparam [21:0] STATE_DWELL_CYCLES = 22'd3000000; // defines how long the FSM stays in one state
+    // localparam [21:0] STATE_DWELL_CYCLES = 22'd3000000; // defines how long the FSM stays in one state
 
     // logic [2:0] funct3 = 3'b010;
     logic dmem_wren = 1'b0;
     logic [31:0] dmem_address = 31'd0;
     logic [31:0] dmem_data_in = 31'd0;
     logic [31:0] dmem_data_out;
-    logic [31:0] imem_address = 31'h1000; // h means hex, 1 hex bit is 4 bits, .... 0001 0000 0000 0000
+    logic [31:0] imem_address;     // = 31'h1000; // h means hex, 1 hex bit is 4 bits, .... 0001 0000 0000 0000
     logic [31:0] imem_data_out; // IR (instruction register) storing instructions for future output
 
     logic reset;
@@ -63,8 +63,8 @@ module top (
     logic green;
     logic blue;
 
-    logic [3:0] state = INIT;
-    logic [21:0] count = 22'd0;
+    // logic [3:0] state = INIT;
+    // logic [21:0] count = 22'd0;
 
     // Wires, non-architectural 
     logic [31:0] Instr, A, RD1, RD2, RD2_out, ImmExt, ALUResult, ALUOut, Adr, Data, Result, ALUSrcA_out, ALUSrcB_out, WriteData, OldPC;
@@ -144,7 +144,7 @@ module top (
         .SrcB(ALUSrcB_out),
         .ALUControl(ALUControl),
         .Zero (Zero),
-        .ALUResult(ALUResult),
+        .ALUResult(ALUResult)
     );
 
     always_ff @(posedge clk)begin 
