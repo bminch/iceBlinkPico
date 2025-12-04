@@ -12,7 +12,7 @@ module ControlUnit (
     output logic [3:0]  ALUControl,
     output logic [1:0]  ALUSrcA,
     output logic [1:0]  ALUSrcB,
-    output logic [1:0]  ImmSrc,
+    output logic [2:0]  ImmSrc,
     output logic        RegWrite
 );
 
@@ -29,6 +29,7 @@ module ControlUnit (
     localparam [3:0] BEQ        = 4'd8;
     localparam [3:0] JAL        = 4'd9;
     localparam [3:0] EXECUTE_I   = 4'd10;
+    localparam [3:0] EXECUTE_U   = 4'd11;
 
     // intermediate wires in the Control Unit
     logic Branch;
@@ -84,6 +85,7 @@ otherwise, they are 0.
                     7'b1100011: next_state = BEQ;       // beq
                     7'b0010011: next_state = EXECUTE_I;  // I-type ALU (addi, etc.)
                     7'b1101111: next_state = JAL;       // jal
+                    7'b0110111: next_state = EXECUTE_U; // lui
                     // no default to preserve original behavior
                 endcase
             end
@@ -140,6 +142,12 @@ otherwise, they are 0.
                 ALUOp = 2'b10;
                 next_state = ALU_WB;
             end
+            EXECUTE_U: begin
+                ALUSrcA = 2'b11; // supply 0
+                ALUSrcB = 2'b01;
+                ALUOp = 2'b00; // force to just simply add
+                next_state = ALU_WB;
+            end
             JAL: begin
                 ALUSrcA = 2'b01;
                 ALUSrcB = 2'b10;
@@ -186,12 +194,13 @@ otherwise, they are 0.
     // Instr Decoder
     always_comb begin
         case (op)
-            7'b0000011: ImmSrc = 2'b00; // lw
-            7'b0010011: ImmSrc = 2'b00; // I-type (load, ALU immediate)
-            7'b0100011: ImmSrc = 2'b01; // S-type (store)
-            7'b1100011: ImmSrc = 2'b10; // B-type (branch)
-            7'b1101111: ImmSrc = 2'b11; // J-type (jal)
-            default:    ImmSrc = 2'b00; // default to I-type
+            7'b0000011: ImmSrc = 3'b000; // lw (I-type)
+            7'b0010011: ImmSrc = 3'b000; // I-type (ALU immediate)
+            7'b0100011: ImmSrc = 3'b001; // S-type (store)
+            7'b1100011: ImmSrc = 3'b010; // B-type (branch)
+            7'b1101111: ImmSrc = 3'b011; // J-type (jal)
+            7'b0110111: ImmSrc = 3'b100; // U-type (lui)
+            default:    ImmSrc = 3'b000; // default to I-type
         endcase
     end
 

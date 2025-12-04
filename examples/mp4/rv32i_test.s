@@ -43,7 +43,7 @@ srai
                             # pc = 0x54
                             # pc = 0x58
     jalr x14, 0(x13)        # pc = 0x5C, x14 = 0x00000060
-    addi x17, x0, 0xC0      # pc = 0x60, x17 = 0x000000C0
+    addi x17, x0, 0xC0      # pc = 0x60, x17 = 0x000000C0 #works
     sb x17, -4(x0)          # pc = 0x64
     sb x17, -3(x0)          # pc = 0x68
     sb x17, -2(x0)          # pc = 0x6C
