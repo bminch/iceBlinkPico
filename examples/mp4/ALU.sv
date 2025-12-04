@@ -12,6 +12,8 @@ localparam SUB = 3'b001;
 localparam AND = 3'b010;
 localparam OR = 3'b011;
 localparam SLT = 3'b101; // SET_LESS_THAN
+localparam XOR = 3'b100;
+
 
 always_comb begin
     ALUResult = 32'b0;
@@ -33,7 +35,7 @@ always_comb begin
         AND: ALUResult = SrcA & SrcB;
         OR:  ALUResult = SrcA | SrcB;
         SLT: ALUResult = SrcA < SrcB;
-        
+        XOR: ALUResult = SrcA ^ SrcB;
         default: begin
         end
     endcase

@@ -25,9 +25,9 @@ and √
 or √
 slt √
 
-andi
-ori
-slti
+andi (not checked, but confident) 
+ori (not checked, but confident)
+slti (not checked, but confident)
 
 lw
 sw

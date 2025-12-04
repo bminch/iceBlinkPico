@@ -170,6 +170,7 @@ otherwise, they are 0.
                         else
                             ALUControl = 3'b000; // add, addi
                         3'b010: ALUControl = 3'b101; // slt, slti
+                        3'b100: ALUControl = 3'b100; // xor
                         3'b110: ALUControl = 3'b011; // or, ori
                         3'b111: ALUControl = 3'b010; // and, andi
                         default: ALUControl = 3'bxxx; // ???
