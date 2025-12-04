@@ -32,6 +32,9 @@ module ControlUnit (
     localparam [3:0] EXECUTE_U   = 4'd11;
     localparam [3:0] EXECUTE_UPC = 4'd12;
     localparam [3:0] WAIT        = 4'd13;
+    localparam [3:0] EXECUTE_UPC   = 4'd12;
+    localparam [3:0] JALR          = 4'd13;
+    localparam [3:0] JALR_EXEC     = 4'd14;
 
     // intermediate wires in the Control Unit
     logic Branch;
@@ -87,6 +90,7 @@ otherwise, they are 0.
                     7'b1100011: next_state = BEQ;       // beq
                     7'b0010011: next_state = EXECUTE_I;  // I-type ALU (addi, etc.)
                     7'b1101111: next_state = JAL;       // jal
+                    7'b1100111: next_state = JALR;      // jalr
                     7'b0110111: next_state = EXECUTE_U; // lui
                     7'b0010111: next_state = EXECUTE_UPC; // auipc
                     // no default to preserve original behavior
@@ -170,6 +174,22 @@ otherwise, they are 0.
                 PCUpdate = 1;
                 next_state = ALU_WB;
             end
+            JALR: begin
+                ALUSrcA = 2'b01;
+                ALUSrcB = 2'b10; 
+                ALUOp = 2'b00;
+                ResultSrc = 2'b10; 
+                RegWrite = 1;      
+                next_state = JALR_EXEC;
+            end
+            JALR_EXEC: begin
+                ALUSrcA = 2'b10;   // rs1
+                ALUSrcB = 2'b01;   // Imm
+                ALUOp = 2'b00;     // add
+                ResultSrc = 2'b10; 
+                PCUpdate = 1;      // update PC
+                next_state = FETCH;
+            end
         endcase
     end
 
@@ -217,6 +237,7 @@ otherwise, they are 0.
             7'b0100011: ImmSrc = 3'b001; // S-type (store)
             7'b1100011: ImmSrc = 3'b010; // B-type (branch)
             7'b1101111: ImmSrc = 3'b011; // J-type (jal)
+            7'b1100111: ImmSrc = 3'b000; // I-type (jalr)
             7'b0110111: ImmSrc = 3'b100; // U-type (lui)
             7'b0010111: ImmSrc = 3'b100; // U-type (auipc)
             default:    ImmSrc = 3'b000; // default to I-type

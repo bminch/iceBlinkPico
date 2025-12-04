@@ -1,55 +1,23 @@
-addi x1, x0, 1 # 0x00100093
- addi x2, x1, 2          #. 0x00208113
-add x3, x1, x2         # 0x002081b3
-sub x4, x3, x1 # 0x40118233
-sw x4,-4(x0) #0xfe402e23 # 0x00402023 # 0x3e402223 # 0x98402b23
-lw x6,-4(x0) # 0xffc02303
-AND x7,x2, x4 # 0x004173b3
-AND x8,x1, x4 # 0x0040f433
-or x9,x1, x4 # 0x0040e4b3
-or x10,x0, x3 # 0x00306533
-slt x11,x1, x3 # 0x0030a5b3
-slt x12,x3, x1 # 0x0011a5b3
-xori x13,x2,3 # 0x00014613
-srli x14,x3,0 # 0x0001d713
-srli x15,x3,4 # 0x0041d793
-srai x16,x3,4 # 0x4041d793
-sll x17, x2, x4 #0x004118b3
-beq x1, x1, 12 0x00108663
-00
-slli x18, x2, 0 #0x00011913
-sltu x19, x2, x1 #0x001139b3
-sltu x20, x1, x2 #0x0020ba33
-
-addi x1, x0, 1 # 0x00100093
-beq x1, x1, 12 0x00108663
-00
-00
-addi x2, x1, 2          #. 0x00208113
-add x3, x1, x2         # 0x002081b3
-
-
-
 
 # TODO Instructions
 # auipc, jal, jalr, beq, bltu, blt, 
 # Brad's code
-    lui x1, 0xFEDCC         # pc = 0x00, x1 = 0xFEDCC000
-    addi x1, x1, 0xA98      # pc = 0x04, x1 = 0xFEDCBA98
-    srli x2, x1, 4          # pc = 0x08, x2 = 0x0FEDCBA9
-    srai x3, x1, 4          # pc = 0x0C, x3 = 0xFFEDCBA9
-    xori x4, x3, -1         # pc = 0x10, x4 = 0x00123456
-    addi x5, x0, 2          # pc = 0x14, x5 = 0x00000002
-    add x6, x5, x4          # pc = 0x18, x6 = 0x00123458
-    sub x7, x6, x4          # pc = 0x1C, x7 = 0x00000002
-    sll x8, x4, x5          # pc = 0x20, x8 = 0x0048D158
-    ori x9, x8, 7           # pc = 0x24, x9 = 0x0048D15F
-    auipc x10, 0x12345      # pc = 0x28, x10 = 0x12345028
-    slt x11, x3, x4         # pc = 0x2C, x11 = 0x00000001
-    sltu x12, x3, x4        # pc = 0x30, x12 = 0x00000000
-    jal x13, 0x28           # pc = 0x34, x13 = 0x00000038
+    lui x1, 0xFEDCC         # pc = 0x00, x1 = 0xFEDCC000 // good
+    addi x1, x1, 0xA98      # pc = 0x04, x1 = 0xFEDCBA98 // good
+    srli x2, x1, 4          # pc = 0x08, x2 = 0x0FEDCBA9  //good
+    srai x3, x1, 4          # pc = 0x0C, x3 = 0xFFEDCBA9  //good
+    xori x4, x3, -1         # pc = 0x10, x4 = 0x00123456 //good
+    addi x5, x0, 2          # pc = 0x14, x5 = 0x00000002 // good
+    add x6, x5, x4          # pc = 0x18, x6 = 0x00123458 //good 
+    sub x7, x6, x4          # pc = 0x1C, x7 = 0x00000002 // good
+    sll x8, x4, x5          # pc = 0x20, x8 = 0x0048D158 // good
+    ori x9, x8, 7           # pc = 0x24, x9 = 0x0048D15F // good
+    auipc x10, 0x12345      # pc = 0x28, x10 = 0x12345028 // 1000 off
+    slt x11, x3, x4         # pc = 0x2C, x11 = 0x00000001 // good 
+    sltu x12, x3, x4        # pc = 0x30, x12 = 0x00000000 // good
+    jal x13, 0x28           # pc = 0x34, x13 = 0x00000038 // 1000 off cause our code is running base 0x1000
     addi x15, x0, 10        # pc = 0x38, x15 = 0x0000000A
-    beq x15, x0, 12         # pc = 0x3C
+    beq x15, x0, 12         # pc = 0x3C // up to here 
     addi x15, x15, -1       # pc = 0x40
     jal x16, -8             # pc = 0x44, x16 = 0x00000048
     bltu x3, x4, 8          # pc = 0x48
