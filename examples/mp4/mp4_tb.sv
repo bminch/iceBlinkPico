@@ -61,7 +61,7 @@ module mp4_tb;
         $dumpvars(0, u0.mem.dmem1.memory[1023]);
         $dumpvars(0, u0.mem.dmem2.memory[1023]);
         $dumpvars(0, u0.mem.dmem3.memory[1023]);
-        #100000
+        #1000000
         // Display memory index 1023 for all four data memories
         $display("dmem0[1023]=%0d", u0.mem.dmem0.memory[1023]);
         $display("dmem1[1023]=%0d", u0.mem.dmem1.memory[1023]);
