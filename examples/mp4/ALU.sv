@@ -16,6 +16,7 @@ localparam SLT = 4'b0101; // SET_LESS_THAN
 localparam SRL = 4'b0110;
 localparam SRA = 4'b0111;
 localparam SLL = 4'b1000;
+localparam SLTU = 4'b1001;
 
 
 always_comb begin // From what I understand if R type works, immediate type works too
@@ -42,6 +43,7 @@ always_comb begin // From what I understand if R type works, immediate type work
         SRL: ALUResult = SrcA >> SrcB;
         SRA: ALUResult = SrcA >>> SrcB;
         SLL: ALUResult = SrcA << SrcB;
+        SLTU: ALUResult = SrcA < SrcB;
         default: begin
         end
     endcase
