@@ -11,6 +11,8 @@ or x10,x0, x3 # 0x00306533
 slt x11,x1, x3 # 0x0030a5b3
 slt x12,x3, x1 # 0x0011a5b3
 xori x13,x2,3 # 0x00014613
+srli x14,x3,0 # 0x0001d713
+srli x15,x3,4 # 0x0041d793
 
 
 srli 

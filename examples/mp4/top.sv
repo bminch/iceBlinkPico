@@ -24,7 +24,9 @@ sub √
 and √
 or √
 slt √
+xori √
 
+xor
 andi (not checked, but confident) 
 ori (not checked, but confident)
 slti (not checked, but confident)

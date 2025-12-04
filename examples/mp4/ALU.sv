@@ -11,11 +11,12 @@ localparam ADD = 3'b000;
 localparam SUB = 3'b001;
 localparam AND = 3'b010;
 localparam OR = 3'b011;
-localparam SLT = 3'b101; // SET_LESS_THAN
 localparam XOR = 3'b100;
+localparam SLT = 3'b101; // SET_LESS_THAN
+localparam SRL = 3'b110;
 
 
-always_comb begin
+always_comb begin // From what I understand if R type works, immediate type works too
     ALUResult = 32'b0;
     Zero = 0;
     case (ALUControl)
@@ -36,6 +37,7 @@ always_comb begin
         OR:  ALUResult = SrcA | SrcB;
         SLT: ALUResult = SrcA < SrcB;
         XOR: ALUResult = SrcA ^ SrcB;
+        SRL: ALUResult = SrcA >> SrcB;
         default: begin
         end
     endcase
