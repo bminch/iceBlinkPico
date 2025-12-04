@@ -173,19 +173,21 @@ otherwise, they are 0.
             2'b01: ALUControl = 4'b0001; // subtraction
             default: begin
                 case(funct3) // R–type or I–type ALU
-                3'b000: if (RtypeSub)
-                            ALUControl = 4'b0001; // sub
-                        else
-                            ALUControl = 4'b0000; // add, addi
-                        3'b111: ALUControl = 4'b0010; // and, andi
-                        3'b110: ALUControl = 4'b0011; // or, ori
-                        3'b100: ALUControl = 4'b0100; // xor, xori
-                        3'b010: ALUControl = 4'b0101; // slt, slti
-                        3'b101: begin
-                            if (funct7) ALUControl = 4'b0111; // sra/srai
-                            else ALUControl = 3'b0110;// srl, srli
-                        end
-                        default: ALUControl = 3'bxxx; // ???
+                3'b000: begin
+                    if (RtypeSub) ALUControl = 4'b0001; // sub
+                    else ALUControl = 4'b0000; // add, addi
+                end
+                3'b111: ALUControl = 4'b0010; // and, andi
+                3'b110: ALUControl = 4'b0011; // or, ori
+                3'b100: ALUControl = 4'b0100; // xor, xori
+                3'b010: ALUControl = 4'b0101; // slt, slti
+                3'b101: begin
+                    if (funct7) ALUControl = 4'b0111; // sra/srai
+                    else ALUControl = 4'b0110;// srl, srli
+                end
+                3'b001: ALUControl = 4'b1000;
+
+                default: ALUControl = 4'bxxx; // ???
                 endcase
             end
         endcase
