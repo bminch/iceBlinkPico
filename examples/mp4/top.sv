@@ -21,15 +21,17 @@ Instructions currently supported:
 addi √
 add √
 sub √
+and √
+or √
+slt √
 
-
-and 
-lw
-sw
-beq
 andi
 ori
 slti
+
+lw
+sw
+beq
 jal
 
 
