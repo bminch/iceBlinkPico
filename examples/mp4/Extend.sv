@@ -14,7 +14,7 @@ module Extend (
             3'b010: ImmExt = {{20{in[31]}}, in[7], in[30:25], in[11:8], 1'b0};
             // J-type (jal)
             3'b011: ImmExt = {{12{in[31]}}, in[19:12], in[20], in[30:21], 1'b0};
-            // U-type (lui)
+            // U-type (lui, auipc)
             3'b100: ImmExt = {in[31:12], 12'b0};
             default: ImmExt = 32'bx; // undefined
         endcase
