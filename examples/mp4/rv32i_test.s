@@ -13,14 +13,12 @@ slt x12,x3, x1 # 0x0011a5b3
 xori x13,x2,3 # 0x00014613
 srli x14,x3,0 # 0x0001d713
 srli x15,x3,4 # 0x0041d793
+srai x16,x3,4 # 0x4041d793
 
 
 srli 
 srai
-
-
-
-
+# Brad's code
     lui x1, 0xFEDCC         # pc = 0x00, x1 = 0xFEDCC000
     addi x1, x1, 0xA98      # pc = 0x04, x1 = 0xFEDCBA98
     srli x2, x1, 4          # pc = 0x08, x2 = 0x0FEDCBA9

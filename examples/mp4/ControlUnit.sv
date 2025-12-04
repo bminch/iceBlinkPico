@@ -9,7 +9,7 @@ module ControlUnit (
     output logic        MemWrite,
     output logic        IRWrite,
     output logic [1:0]  ResultSrc,
-    output logic [2:0]  ALUControl,
+    output logic [3:0]  ALUControl,
     output logic [1:0]  ALUSrcA,
     output logic [1:0]  ALUSrcB,
     output logic [1:0]  ImmSrc,
@@ -161,19 +161,22 @@ otherwise, they are 0.
     assign RtypeSub = funct7 & op[5]; // TRUE for R–type subtract
     always_comb begin
         case(ALUOp)
-            2'b00: ALUControl = 3'b000; // addition
-            2'b01: ALUControl = 3'b001; // subtraction
+            2'b00: ALUControl = 4'b0000; // addition
+            2'b01: ALUControl = 4'b0001; // subtraction
             default: begin
                 case(funct3) // R–type or I–type ALU
                 3'b000: if (RtypeSub)
-                            ALUControl = 3'b001; // sub
+                            ALUControl = 4'b0001; // sub
                         else
-                            ALUControl = 3'b000; // add, addi
-                        3'b111: ALUControl = 3'b010; // and, andi
-                        3'b110: ALUControl = 3'b011; // or, ori
-                        3'b100: ALUControl = 3'b100; // xor, xori
-                        3'b010: ALUControl = 3'b101; // slt, slti
-                        3'b101: ALUControl = 3'b110; // srl, srli
+                            ALUControl = 4'b0000; // add, addi
+                        3'b111: ALUControl = 4'b0010; // and, andi
+                        3'b110: ALUControl = 4'b0011; // or, ori
+                        3'b100: ALUControl = 4'b0100; // xor, xori
+                        3'b010: ALUControl = 4'b0101; // slt, slti
+                        3'b101: begin
+                            if (funct7) ALUControl = 4'b0111; // sra/srai
+                            else ALUControl = 3'b0110;// srl, srli
+                        end
                         default: ALUControl = 3'bxxx; // ???
                 endcase
             end

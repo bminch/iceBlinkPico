@@ -2,18 +2,19 @@
 module ALU (
     input  logic [31:0] SrcA,
     input  logic [31:0] SrcB,
-    input  logic [2:0]  ALUControl,
+    input  logic [3:0]  ALUControl,
     output logic Zero,
     output logic [31:0] ALUResult
 );
 
-localparam ADD = 3'b000;
-localparam SUB = 3'b001;
-localparam AND = 3'b010;
-localparam OR = 3'b011;
-localparam XOR = 3'b100;
-localparam SLT = 3'b101; // SET_LESS_THAN
-localparam SRL = 3'b110;
+localparam ADD = 4'b0000;
+localparam SUB = 4'b0001;
+localparam AND = 4'b0010;
+localparam OR = 4'b0011;
+localparam XOR = 4'b0100;
+localparam SLT = 4'b0101; // SET_LESS_THAN
+localparam SRL = 4'b0110;
+localparam SRA = 4'b0111;
 
 
 always_comb begin // From what I understand if R type works, immediate type works too
@@ -38,6 +39,8 @@ always_comb begin // From what I understand if R type works, immediate type work
         SLT: ALUResult = SrcA < SrcB;
         XOR: ALUResult = SrcA ^ SrcB;
         SRL: ALUResult = SrcA >> SrcB;
+        SRA: ALUResult = SrcA >>> SrcB;
+
         default: begin
         end
     endcase
