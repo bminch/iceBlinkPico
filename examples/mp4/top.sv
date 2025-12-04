@@ -6,6 +6,7 @@
 `include "ControlUnit.sv"
 `include "Mux2_to_1.sv"
 `include "Mux3_to_1.sv"
+`include "Mux_ALUSrcA.sv"
 
 
 /*
@@ -26,8 +27,6 @@ andi
 ori
 slti
 jal
-
-
 
 */
 module top (
@@ -68,8 +67,8 @@ module top (
 
     // Wires, non-architectural 
     logic IRWrite, AdrSrc, PCWrite, MemWrite, RegWrite, Zero;
-    logic [1:0] ImmSrc, ALUSrcA, ResultSrc, ALUSrcB;
-    logic [2:0] ALUControl;
+    logic [1:0] ALUSrcA, ResultSrc, ALUSrcB;
+    logic [2:0] ALUControl, ImmSrc;
     logic [31:0] Instr, A, RD1, RD2, RD2_out, ImmExt, ALUResult, ALUOut, Adr, Data, Result, ALUSrcA_out, ALUSrcB_out, WriteData, OldPC;
 
     ControlUnit ControlUnit (
@@ -97,7 +96,7 @@ module top (
         .PC_out (imem_address)
     );
 
-    Mux3_to_1 Mux_ALUSrcA (
+    Mux_ALUSrcA Mux_ALUSrcA (
         .sel(ALUSrcA),
         .A(imem_address),
         .B(OldPC),

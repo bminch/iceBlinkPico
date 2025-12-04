@@ -1,5 +1,5 @@
 #addi x1, x0, 1 # 0x00100093
-    lui x1, 0xFEDCC         # pc = 0x00, x1 = 0xFEDCC000
+    lui x1, 0xFEDCC         # pc = 0x00, x1 = 0xFEDCC000 # works
     addi x1, x1, 0xA98      # pc = 0x04, x1 = 0xFEDCBA98
     srli x2, x1, 4          # pc = 0x08, x2 = 0x0FEDCBA9
     srai x3, x1, 4          # pc = 0x0C, x3 = 0xFFEDCBA9
@@ -23,7 +23,7 @@
                             # pc = 0x54
                             # pc = 0x58
     jalr x14, 0(x13)        # pc = 0x5C, x14 = 0x00000060
-    addi x17, x0, 0xC0      # pc = 0x60, x17 = 0x000000C0
+    addi x17, x0, 0xC0      # pc = 0x60, x17 = 0x000000C0 #works
     sb x17, -4(x0)          # pc = 0x64
     sb x17, -3(x0)          # pc = 0x68
     sb x17, -2(x0)          # pc = 0x6C
