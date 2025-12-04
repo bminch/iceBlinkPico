@@ -5,6 +5,7 @@ sub x4, x3, x1 # 0x40118233
 sw x4,-4(x0) #0xfe402e23 # 0x00402023 # 0x3e402223 # 0x98402b23
 lw x6,-4(x0) # 0xffc02303
 auipc x10, 0x12345      # 0x12345517
+jal x5, -4           # 0xffdff2ef
 
 
 
