@@ -19,11 +19,10 @@ slli x18, x2, 0 #0x00011913
 sltu x19, x2, x1 #0x001139b3
 sltu x20, x1, x2 #0x0020ba33
 beq x1, x1, -12 #0xfe108ae3
-beq x2, x3, 4 #0x00310263
 
 
 # TODO Instructions
-# auipc, jal, beq, bltu, blt, jalr, sb, and all the load type instructions
+# auipc, jal, jalr, beq, bltu, blt, 
 # Brad's code
     lui x1, 0xFEDCC         # pc = 0x00, x1 = 0xFEDCC000
     addi x1, x1, 0xA98      # pc = 0x04, x1 = 0xFEDCBA98

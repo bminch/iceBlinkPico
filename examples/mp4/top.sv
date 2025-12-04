@@ -26,16 +26,17 @@ and √
 or √
 slt √
 xori √
+lw lh lb √
+sw sh sb √
+auipic √
 
+not checked but confident
 xor
 andi (not checked, but confident) 
 ori (not checked, but confident)
 slti (not checked, but confident)
 
-lw
-sw
-beq
-jal
+# jal, jalr, beq, bltu, blt, 
 
 */
 module top (
@@ -186,7 +187,7 @@ module top (
         .imem_address   (imem_address), 
         .imem_data_out  (imem_data_out), 
         .dmem_data_out  (dmem_data_out), 
-        .reset          (reset), 
+        // .reset          (reset), 
         .led            (led), 
         .red            (red), 
         .green          (green), 
