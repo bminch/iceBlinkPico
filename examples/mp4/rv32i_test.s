@@ -18,7 +18,11 @@ sll x17, x2, x4 #0x004118b3
 slli x18, x2, 0 #0x00011913
 sltu x19, x2, x1 #0x001139b3
 sltu x20, x1, x2 #0x0020ba33
-beq x1, x1, -12 #0xfe108ae3
+beq x1, x1, 8    # 0x00108463  # beq x1, x1, 12 0x00108663
+addi x21, x1, 10 # 0x00808a93
+addi x22, x1, 10 # 0x00808b13
+addi x23, x1, 10 # 0x00808b93
+
 
 
 # TODO Instructions

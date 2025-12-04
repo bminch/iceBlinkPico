@@ -134,8 +134,9 @@ otherwise, they are 0.
                 ALUOp = 2'b01;
                 ResultSrc = 2'b00;
                 Branch = 1;
-                IRWrite = 1;
-                next_state = DECODE;
+                next_state = FETCH; // what it should be 
+               // IRWrite = 1; // should be 0;
+               // next_state = DECODE; 
             end
             EXECUTE_I: begin
                 ALUSrcA = 2'b10;
