@@ -202,12 +202,6 @@ module top (
 
     // otherwise there is data cycle memory delay
     assign Data = dmem_data_out;
-    
-
-
-
-
-
 
     // LED and RGB PWM values are purely dmem_in_data because we are writing only full word
     assign LED = ~led;
