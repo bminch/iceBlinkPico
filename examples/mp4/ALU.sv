@@ -24,6 +24,7 @@ always_comb begin
                 Zero = 0;
             end
         end
+        
         // and, or, slt
         default: begin
         end

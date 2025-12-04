@@ -1,5 +1,13 @@
 addi x1, x0, 1 # 0x00100093
  addi x2, x1, 2          #. 0x00208113
+add x3, x1, x2         # 0x002081b3
+sub x4, x3, x1 # 0x40118233
+and x5, x4, x2 # 0x002272b3
+sw x5,-4(x0) # 0xfe502e23
+lw x6,-4(x0) 0xffc02303 
+
+
+
 
 
     lui x1, 0xFEDCC         # pc = 0x00, x1 = 0xFEDCC000

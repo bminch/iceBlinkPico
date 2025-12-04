@@ -18,10 +18,15 @@ We can manipulate dmem data in and out and what to write and the wren, as well a
 
 Instructions currently supported: 
 
+addi √
+add √
+sub √
+
+
+and 
 lw
 sw
 beq
-addi
 andi
 ori
 slti
