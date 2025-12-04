@@ -232,7 +232,7 @@ module memory #(
         end
     end
 
-    assign dmem_dout = { dmem_data_out3, dmem_data_out2, dmem_data_out1, dmem_data_out0 };
+    assign dmem_dout = is_dmem ? { dmem_data_out3, dmem_data_out2, dmem_data_out1, dmem_data_out0 } : dmem_data_value;
 
     assign dmem_dout10 = dmem_dout[15:0];
     assign dmem_dout32 = dmem_dout[31:16];

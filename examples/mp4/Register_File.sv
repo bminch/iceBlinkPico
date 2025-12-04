@@ -16,7 +16,6 @@ module Register_File (
         for (int k = 0; k < 32; k++) begin
             Registers[k] = 32'd0;
         end
-        Registers[0] = 32'h00001000;
     end
 
     always_ff @(posedge clk) begin

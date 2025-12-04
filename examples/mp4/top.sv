@@ -29,6 +29,7 @@ xori √
 lw lh lb √
 sw sh sb √
 auipic √
+jal √
 
 not checked but confident
 xor
