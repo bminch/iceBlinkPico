@@ -54,10 +54,23 @@ module mp4_tb;
         $dumpvars(0, u0.Reg_File.Registers[28]);
         $dumpvars(0, u0.Reg_File.Registers[29]);
         $dumpvars(0, u0.Reg_File.Registers[30]);
-        $dumpvars(0, u0.Reg_File.Registers[31]);
+        $dumpvars(0, u0.Reg_File.Registers[31]);    
+
+        // Dumpvars for memory index 1023 for all four data memories
+        $dumpvars(0, u0.mem.dmem0.memory[1023]);
+        $dumpvars(0, u0.mem.dmem1.memory[1023]);
+        $dumpvars(0, u0.mem.dmem2.memory[1023]);
+        $dumpvars(0, u0.mem.dmem3.memory[1023]);
         #100000
+        // Display memory index 1023 for all four data memories
+        $display("dmem0[1023]=%0d", u0.mem.dmem0.memory[1023]);
+        $display("dmem1[1023]=%0d", u0.mem.dmem1.memory[1023]);
+        $display("dmem2[1023]=%0d", u0.mem.dmem2.memory[1023]);
+        $display("dmem3[1023]=%0d", u0.mem.dmem3.memory[1023]);
+
+
         $display("\n=== Final Register Values ===");
-        for (i = 1; i <= 23; i = i + 1) begin
+        for (i = 0; i <= 23; i = i + 1) begin
             $display("x%0d = %0d (0x%08h)", i, u0.Reg_File.Registers[i], u0.Reg_File.Registers[i]);
         end
         $finish;

@@ -2,8 +2,8 @@ addi x1, x0, 1 # 0x00100093
  addi x2, x1, 2          #. 0x00208113
 add x3, x1, x2         # 0x002081b3
 sub x4, x3, x1 # 0x40118233
-sw x5,-4(x0) # 0xfe502e23
-lw x6,-4(x0) # 0xffc02303 
+sw x4,-4(x0) #0xfe402e23 # 0x00402023 # 0x3e402223 # 0x98402b23
+lw x6,-4(x0) # 0xffc02303
 AND x7,x2, x4 # 0x004173b3
 AND x8,x1, x4 # 0x0040f433
 or x9,x1, x4 # 0x0040e4b3
@@ -13,8 +13,8 @@ slt x11,x3, x1 0x0011a5b3
 
 
 
-    lui x1, 0xFEDCC         # pc = 0x00, x1 = 0xFEDCC000
-    addi x1, x1, 0xA98      # pc = 0x04, x1 = 0xFEDCBA98
+    lui x1, 0xFEDCC         # pc = 0x00, x1 = 0xFEDCC000 //works
+    addi x1, x1, 0xA98      # pc = 0x04, x1 = 0xFEDCBA98 // works
     srli x2, x1, 4          # pc = 0x08, x2 = 0x0FEDCBA9
     srai x3, x1, 4          # pc = 0x0C, x3 = 0xFFEDCBA9
     xori x4, x3, -1         # pc = 0x10, x4 = 0x00123456

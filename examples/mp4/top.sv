@@ -24,6 +24,8 @@ sub √
 and √
 or √
 slt √
+lui √
+addi √
 
 andi
 ori
@@ -119,6 +121,7 @@ module top (
         .Mux3_to_1_out(ALUSrcB_out)
     );
 
+    // we dont need this????
     Mux2_to_1 Mux_AdrSrc (
         .sel(AdrSrc),
         .A(imem_address),
@@ -178,9 +181,9 @@ module top (
         .clk            (clk), 
         .funct3         (Instr[14:12]), // funct3
         .dmem_wren      (MemWrite), 
-        .dmem_address   (Adr), 
+        .dmem_address   (ALUOut), 
         .dmem_data_in   (WriteData), // LEDs and RGBs are displaying this value, what is being written into the dmem
-        .imem_address   (Adr), 
+        .imem_address   (imem_address), 
         .imem_data_out  (imem_data_out), 
         .dmem_data_out  (dmem_data_out), 
         .reset          (reset), 
@@ -197,9 +200,8 @@ module top (
         end
     end
 
-    always_ff @(posedge clk) begin
-        Data <= dmem_data_out;
-    end
+    // otherwise there is data cycle memory delay
+    assign Data = dmem_data_out;
     
 
 
