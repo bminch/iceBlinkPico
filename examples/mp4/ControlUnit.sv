@@ -30,7 +30,8 @@ module ControlUnit (
     localparam [3:0] JAL        = 4'd9;
     localparam [3:0] EXECUTE_I   = 4'd10;
     localparam [3:0] EXECUTE_U   = 4'd11;
-    localparam [3:0] EXECUTE_UPC   = 4'd12;
+    localparam [3:0] EXECUTE_UPC = 4'd12;
+    localparam [3:0] WAIT        = 4'd13;
 
     // intermediate wires in the Control Unit
     logic Branch;
@@ -136,9 +137,12 @@ otherwise, they are 0.
                 ALUOp = 2'b01;
                 ResultSrc = 2'b00;
                 Branch = 1;
-                next_state = FETCH; // what it should be 
+                next_state = WAIT; // what it should be 
                // IRWrite = 1; // should be 0;
                // next_state = DECODE; 
+            end
+            WAIT: begin
+                next_state = FETCH;
             end
             EXECUTE_I: begin
                 ALUSrcA = 2'b10;

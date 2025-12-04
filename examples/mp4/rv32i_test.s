@@ -4,12 +4,6 @@ add x3, x1, x2         # 0x002081b3
 sub x4, x3, x1 # 0x40118233
 sw x4,-4(x0) #0xfe402e23 # 0x00402023 # 0x3e402223 # 0x98402b23
 lw x6,-4(x0) # 0xffc02303
-auipc x10, 0x12345      # 0x12345517
-jal x5, -4           # 0xffdff2ef
-
-
-
-
 AND x7,x2, x4 # 0x004173b3
 AND x8,x1, x4 # 0x0040f433
 or x9,x1, x4 # 0x0040e4b3
@@ -21,13 +15,19 @@ srli x14,x3,0 # 0x0001d713
 srli x15,x3,4 # 0x0041d793
 srai x16,x3,4 # 0x4041d793
 sll x17, x2, x4 #0x004118b3
+beq x1, x1, 12 0x00108663
+00
 slli x18, x2, 0 #0x00011913
 sltu x19, x2, x1 #0x001139b3
 sltu x20, x1, x2 #0x0020ba33
-beq x1, x1, 8    # 0x00108463  # beq x1, x1, 12 0x00108663
-addi x21, x1, 10 # 0x00808a93
-addi x22, x1, 10 # 0x00808b13
-addi x23, x1, 10 # 0x00808b93
+
+addi x1, x0, 1 # 0x00100093
+beq x1, x1, 12 0x00108663
+00
+00
+addi x2, x1, 2          #. 0x00208113
+add x3, x1, x2         # 0x002081b3
+
 
 
 
@@ -69,12 +69,3 @@ addi x23, x1, 10 # 0x00808b93
     lhu x21, -4(x0)         # pc = 0x7C, x21 = 0x0000C0C0
     lb x22, -4(x0)          # pc = 0x80, x22 = 0xFFFFFFC0
     lbu x23, -4(x0)         # pc = 0x84, x23 = 0x000000C0
-
-
-
-
-
-
-
-
-
