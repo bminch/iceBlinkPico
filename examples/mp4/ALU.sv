@@ -43,9 +43,9 @@ always_comb begin // From what I understand if R type works, immediate type work
             Zero = ALUResult[0];
         end
         XOR: ALUResult = SrcA ^ SrcB;
-        SRL: ALUResult = SrcA >> SrcB;
-        SRA: ALUResult = SrcA >>> SrcB;
-        SLL: ALUResult = SrcA << SrcB;
+        SRL: ALUResult = SrcA >> SrcB[4:0];
+        SRA: ALUResult = $signed(SrcA) >>> SrcB[4:0];
+        SLL: ALUResult = SrcA << SrcB[4:0];
         SLTU: ALUResult = SrcA < SrcB;
         default: begin
         end
