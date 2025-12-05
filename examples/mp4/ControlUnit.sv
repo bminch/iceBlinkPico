@@ -32,6 +32,7 @@ module ControlUnit (
     localparam [3:0] EXECUTE_U   = 4'd11;
     localparam [3:0] EXECUTE_UPC = 4'd12;
     localparam [3:0] WAIT        = 4'd13;
+    localparam [3:0] EXECUTE_BLT = 4'd14;
 
     // intermediate wires in the Control Unit
     logic Branch;
@@ -84,7 +85,7 @@ otherwise, they are 0.
                     7'b0000011: next_state = MEM_ADR;   // lw
                     7'b0100011: next_state = MEM_ADR;   // sw
                     7'b0110011: next_state = EXECUTE_R; // R-type
-                    7'b1100011: next_state = BEQ;       // beq
+                    7'b1100011: next_state = funct3[2] ? EXECUTE_BLT : BEQ; // beq or blt
                     7'b0010011: next_state = EXECUTE_I;  // I-type ALU (addi, etc.)
                     7'b1101111: next_state = JAL;       // jal
                     7'b0110111: next_state = EXECUTE_U; // lui
@@ -137,9 +138,15 @@ otherwise, they are 0.
                 ALUOp = 2'b01;
                 ResultSrc = 2'b00;
                 Branch = 1;
-                next_state = WAIT; // what it should be 
-               // IRWrite = 1; // should be 0;
-               // next_state = DECODE; 
+                next_state = WAIT;
+            end
+            EXECUTE_BLT: begin
+                ALUSrcA = 2'b10;
+                ALUSrcB = 2'b00;
+                ALUOp = 2'b11; // thus ALU instruciton will be based on funct3
+                ResultSrc = 2'b00;
+                Branch = 1;
+                next_state = WAIT;
             end
             WAIT: begin
                 next_state = FETCH;
@@ -192,8 +199,14 @@ otherwise, they are 0.
                     else ALUControl = 4'b0000; // add, addi
                 end
                 3'b111: ALUControl = 4'b0010; // and, andi
-                3'b110: ALUControl = 4'b0011; // or, ori
-                3'b100: ALUControl = 4'b0100; // xor, xori
+                3'b110: begin
+                    if (op == 7'b1100011) ALUControl = 4'b0101; // slt for bltu
+                    else ALUControl = 4'b0011; // or, ori
+                end
+                3'b100: begin
+                    if (op == 7'b1100011) ALUControl = 4'b0101; // slt for blt
+                    else ALUControl = 4'b0100; // xor, xori
+                end
                 3'b010: ALUControl = 4'b0101; // slt, slti
                 3'b011: ALUControl = 4'b1001; //sltu
 

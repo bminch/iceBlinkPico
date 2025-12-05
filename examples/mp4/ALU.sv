@@ -38,7 +38,10 @@ always_comb begin // From what I understand if R type works, immediate type work
         end
         AND: ALUResult = SrcA & SrcB;
         OR:  ALUResult = SrcA | SrcB;
-        SLT: ALUResult = SrcA < SrcB;
+        SLT: begin
+            ALUResult = $signed(SrcA) < $signed(SrcB);
+            Zero = ALUResult[0];
+        end
         XOR: ALUResult = SrcA ^ SrcB;
         SRL: ALUResult = SrcA >> SrcB;
         SRA: ALUResult = SrcA >>> SrcB;
