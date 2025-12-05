@@ -17,7 +17,7 @@
     sltu x12, x3, x4        # pc = 0x30, x12 = 0x00000000 // good
     jal x13, 0x28           # pc = 0x34, x13 = 0x00000038 // 1000 off cause our code is running base 0x1000
     addi x15, x0, 10        # pc = 0x38, x15 = 0x0000000A
-    beq x15, x0, 12         # pc = 0x3C // up to here 
+    beq x15, x0, 12         # pc = 0x3C // up to here  0x00078663
     addi x15, x15, -1       # pc = 0x40
     jal x16, -8             # pc = 0x44, x16 = 0x00000048
     bltu x3, x4, 8          # pc = 0x48

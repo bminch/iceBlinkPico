@@ -31,10 +31,10 @@ module ControlUnit (
     localparam [3:0] EXECUTE_I   = 4'd10;
     localparam [3:0] EXECUTE_U   = 4'd11;
     localparam [3:0] EXECUTE_UPC = 4'd12;
-    localparam [3:0] WAIT        = 4'd13;
-    localparam [3:0] EXECUTE_UPC   = 4'd12;
-    localparam [3:0] JALR          = 4'd13;
-    localparam [3:0] JALR_EXEC     = 4'd14;
+    localparam [3:0] JALR        = 4'd13;
+    localparam [3:0] JALR_EXEC   = 4'd14;
+    localparam [3:0] WAIT        = 4'd15;
+
 
     // intermediate wires in the Control Unit
     logic Branch;
@@ -141,11 +141,9 @@ otherwise, they are 0.
                 ALUOp = 2'b01;
                 ResultSrc = 2'b00;
                 Branch = 1;
-                next_state = WAIT; // what it should be 
-               // IRWrite = 1; // should be 0;
-               // next_state = DECODE; 
+                next_state = WAIT;
             end
-            WAIT: begin
+            WAIT: begin // helps with a clock cycle so the offset instruction can catch up
                 next_state = FETCH;
             end
             EXECUTE_I: begin
@@ -188,7 +186,7 @@ otherwise, they are 0.
                 ALUOp = 2'b00;     // add
                 ResultSrc = 2'b10; 
                 PCUpdate = 1;      // update PC
-                next_state = FETCH;
+                next_state = WAIT;
             end
         endcase
     end
