@@ -18,24 +18,23 @@ module ControlUnit (
 
 
     // Define state variable values
-    localparam [3:0] FETCH      = 4'd0;
-    localparam [3:0] DECODE     = 4'd1;
-    localparam [3:0] MEM_ADR    = 4'd2;
-    localparam [3:0] MEM_READ   = 4'd3;
-    localparam [3:0] MEM_WB     = 4'd4;
-    localparam [3:0] MEM_WRITE  = 4'd5;
-    localparam [3:0] EXECUTE_R  = 4'd6;
-    localparam [3:0] ALU_WB     = 4'd7;
-    localparam [3:0] BEQ        = 4'd8;
-    localparam [3:0] JAL        = 4'd9;
-    localparam [3:0] EXECUTE_I   = 4'd10;
-    localparam [3:0] EXECUTE_U   = 4'd11;
-    localparam [3:0] EXECUTE_UPC = 4'd12;
-    localparam [3:0] WAIT        = 4'd13;
-    localparam [3:0] EXECUTE_BLT = 4'd14;
-    localparam [3:0] JALR        = 4'd13;
-    localparam [3:0] JALR_EXEC   = 4'd14;
-    localparam [3:0] WAIT        = 4'd15;
+    localparam [4:0] FETCH      = 5'd0;
+    localparam [4:0] DECODE     = 5'd1;
+    localparam [4:0] MEM_ADR    = 5'd2;
+    localparam [4:0] MEM_READ   = 5'd3;
+    localparam [4:0] MEM_WB     = 5'd4;
+    localparam [4:0] MEM_WRITE  = 5'd5;
+    localparam [4:0] EXECUTE_R  = 5'd6;
+    localparam [4:0] ALU_WB     = 5'd7;
+    localparam [4:0] BEQ        = 5'd8;
+    localparam [4:0] JAL        = 5'd9;
+    localparam [4:0] EXECUTE_I   = 5'd10;
+    localparam [4:0] EXECUTE_U   = 5'd11;
+    localparam [4:0] EXECUTE_UPC = 5'd12;
+    localparam [4:0] JALR        = 5'd13;
+    localparam [4:0] JALR_EXEC   = 5'd14;
+    localparam [4:0] WAIT        = 5'd15;
+    localparam [4:0] EXECUTE_BLT = 5'd16;
 
 
     // intermediate wires in the Control Unit
@@ -44,8 +43,8 @@ module ControlUnit (
     logic [1:0] ALUOp;
 
     // Declare state variables
-    logic [3:0] current_state = FETCH; // starts with FETCH
-    logic [3:0] next_state;
+    logic [4:0] current_state = FETCH; // starts with FETCH
+    logic [4:0] next_state;
 
 /*
 Enable signals (RegWrite, MemWrite,
@@ -221,7 +220,7 @@ otherwise, they are 0.
                 end
                 3'b111: ALUControl = 4'b0010; // and, andi
                 3'b110: begin
-                    if (op == 7'b1100011) ALUControl = 4'b0101; // slt for bltu
+                    if (op == 7'b1100011) ALUControl = 4'b1001; // slt for bltu
                     else ALUControl = 4'b0011; // or, ori
                 end
                 3'b100: begin

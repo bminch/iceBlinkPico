@@ -46,7 +46,10 @@ always_comb begin // From what I understand if R type works, immediate type work
         SRL: ALUResult = SrcA >> SrcB[4:0];
         SRA: ALUResult = $signed(SrcA) >>> SrcB[4:0];
         SLL: ALUResult = SrcA << SrcB[4:0];
-        SLTU: ALUResult = SrcA < SrcB;
+        SLTU: begin
+            ALUResult = $unsigned(SrcA) < $unsigned(SrcB);
+            Zero = ALUResult[0];
+        end
         default: begin
         end
     endcase
