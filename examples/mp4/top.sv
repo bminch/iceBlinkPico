@@ -87,7 +87,7 @@ module top (
         .clk       (clk),
         .op        (Instr[6:0]),
         .funct3    (Instr[14:12]),
-        .funct7    (Instr[30]),
+        .funct7    (Instr[31:25]),
         .Zero      (Zero),
         .PCWrite   (PCWrite),
         .AdrSrc    (AdrSrc),
