@@ -27,3 +27,10 @@ div  x14, x9, x14       # x14 = -3
 addi x15, x0, -1        # x15 = 0xFFFFFFFF
 addi x16, x0, 2
 divu x15, x15, x16      # x15 = 0x7FFFFFFF
+
+# -------- REM (signed remainder) --------
+rem  x17, x9, x14      # x17 = 1  
+
+# -------- REMU (unsigned remainder) --------
+addi x18, x0, 3
+remu x19, x9, x18      # x19 = 1
