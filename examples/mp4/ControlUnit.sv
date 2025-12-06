@@ -2,7 +2,7 @@ module ControlUnit (
     input  logic        clk,
     input logic [6:0]  op,
     input logic [2:0]  funct3,
-    input logic        funct7,
+    input logic [6:0]      funct7,
     input logic        Zero,
     output logic        PCWrite,
     output logic        AdrSrc,
@@ -207,15 +207,17 @@ otherwise, they are 0.
 
     // ALU Decoder (same as single cycle)
     logic RtypeSub;
-    assign RtypeSub = funct7 & op[5]; // TRUE for R–type subtract
+    assign RtypeSub = funct7[5] & op[5]; // TRUE for R–type subtract // is this little endian?, im not sure
+    // if funct7[6] is true (1), then we know its multiply
     always_comb begin
         case(ALUOp)
             2'b00: ALUControl = 4'b0000; // addition
             2'b01: ALUControl = 4'b0001; // subtraction
             default: begin
                 case(funct3) // R–type or I–type ALU
-                3'b000: begin
+                3'b000: begin // mul is here too  0000001 (lsb)
                     if (RtypeSub) ALUControl = 4'b0001; // sub
+                    else if (funct7 == 7'b0000001) ALUControl = 4'b1010; // MUL
                     else ALUControl = 4'b0000; // add, addi
                 end
                 3'b111: ALUControl = 4'b0010; // and, andi
@@ -225,16 +227,28 @@ otherwise, they are 0.
                 end
                 3'b100: begin
                     if (op == 7'b1100011) ALUControl = 4'b0101; // slt for blt
+                    else if (funct7 == 7'b0000001) ALUControl = 4'b1110; // div
                     else ALUControl = 4'b0100; // xor, xori
                 end
-                3'b010: ALUControl = 4'b0101; // slt, slti
-                3'b011: ALUControl = 4'b1001; //sltu
+                3'b010: begin
+                        if (funct7 == 7'b0000001) ALUControl = 4'b1100;   // MULHSU 
+                        else ALUControl = 4'b0101; // slt, slti
+                end
+                3'b011: begin
+                    if (funct7 == 7'b0000001) ALUControl = 4'b1101;   // MULHU
+                    else ALUControl = 4'b1001; //sltu // mulhu 
+                end
 
                 3'b101: begin
-                    if (funct7) ALUControl = 4'b0111; // sra/srai
+                    if (funct7[5]) ALUControl = 4'b0111; // sra/srai
+                    else if (funct7 == 7'b0000001) ALUControl = 4'b1111;
                     else ALUControl = 4'b0110;// srl, srli
                 end
-                3'b001: ALUControl = 4'b1000;
+                3'b001: begin 
+                    if (funct7 == 7'b0000001) ALUControl = 4'b1011; // mulh 
+                    else ALUControl = 4'b1000; // sll  
+                end
+                
 
                 default: ALUControl = 4'bxxx; // ???
                 endcase
