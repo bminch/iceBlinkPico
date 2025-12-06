@@ -80,7 +80,7 @@ module top (
     logic IRWrite, AdrSrc, PCWrite, MemWrite, RegWrite, Zero;
     logic [1:0] ALUSrcA, ResultSrc, ALUSrcB;
     logic [2:0] ImmSrc;
-    logic [3:0] ALUControl;
+    logic [4:0] ALUControl;
     logic [31:0] Instr, A, RD1, RD2, RD2_out, ImmExt, ALUResult, ALUOut, Adr, Data, Result, ALUSrcA_out, ALUSrcB_out, WriteData, OldPC;
 
     ControlUnit ControlUnit (
