@@ -2,27 +2,29 @@
 module ALU (
     input  logic [31:0] SrcA,
     input  logic [31:0] SrcB,
-    input  logic [3:0]  ALUControl,
+    input  logic [4:0]  ALUControl,
     output logic Zero,
     output logic [31:0] ALUResult
 );
 
-localparam ADD = 4'b0000;
-localparam SUB = 4'b0001;
-localparam AND = 4'b0010;
-localparam OR = 4'b0011;
-localparam XOR = 4'b0100;
-localparam SLT = 4'b0101; // SET_LESS_THAN
-localparam SRL = 4'b0110;
-localparam SRA = 4'b0111;
-localparam SLL = 4'b1000;
-localparam SLTU = 4'b1001;
-localparam MUL =  4'b1010;
-localparam MULH = 4'b1011;
-localparam MULHSU = 4'b1100;
-localparam MULHU = 4'b1101;
-localparam DIV = 4'b1110;
-localparam DIVU = 4'b1111;
+localparam ADD = 5'b00000;
+localparam SUB = 5'b00001;
+localparam AND = 5'b00010;
+localparam OR = 5'b00011;
+localparam XOR = 5'b00100;
+localparam SLT = 5'b00101; // SET_LESS_THAN
+localparam SRL = 5'b00110;
+localparam SRA = 5'b00111;
+localparam SLL = 5'b01000;
+localparam SLTU = 5'b01001;
+localparam MUL =  5'b01010;
+localparam MULH = 5'b01011;
+localparam MULHSU = 5'b01100;
+localparam MULHU = 5'b01101;
+localparam DIV = 5'b01110;
+localparam DIVU = 5'b01111;
+localparam REM = 5'b10000;
+localparam REMU = 5'b10001;
 
 logic[63:0] temp_64 = 64'd0;
 
@@ -100,8 +102,15 @@ always_comb begin // From what I understand if R type works, immediate type work
         end
         default: begin
         end
+        // REM
+        REM: begin 
+            ALUResult = ($signed(SrcA) % $signed(SrcB)); //rem
+        end
+        REMU: begin
+            ALUResult = SrcA % SrcB;
+        end
+
     endcase
 end
-
 
 endmodule

@@ -9,7 +9,7 @@ module ControlUnit (
     output logic        MemWrite,
     output logic        IRWrite,
     output logic [1:0]  ResultSrc,
-    output logic [3:0]  ALUControl,
+    output logic [4:0]  ALUControl,
     output logic [1:0]  ALUSrcA,
     output logic [1:0]  ALUSrcB,
     output logic [2:0]  ImmSrc,
@@ -211,46 +211,50 @@ otherwise, they are 0.
     // if funct7[6] is true (1), then we know its multiply
     always_comb begin
         case(ALUOp)
-            2'b00: ALUControl = 4'b0000; // addition
-            2'b01: ALUControl = 4'b0001; // subtraction
+            2'b00: ALUControl = 5'b00000; // addition
+            2'b01: ALUControl = 5'b00001; // subtraction
             default: begin
                 case(funct3) // R–type or I–type ALU
                 3'b000: begin // mul is here too  0000001 (lsb)
-                    if (RtypeSub) ALUControl = 4'b0001; // sub
-                    else if (funct7 == 7'b0000001) ALUControl = 4'b1010; // MUL
-                    else ALUControl = 4'b0000; // add, addi
+                    if (RtypeSub) ALUControl = 5'b00001; // sub
+                    else if (funct7 == 7'b0000001) ALUControl = 5'b01010; // MUL
+                    else ALUControl = 5'b00000; // add, addi
                 end
-                3'b111: ALUControl = 4'b0010; // and, andi
+                3'b111: begin    
+                   if (funct7 == 7'b0000001) ALUControl = 5'b10001; // remu
+                    else ALUControl = 5'b00010; // and, andi
+                end
                 3'b110: begin
-                    if (op == 7'b1100011) ALUControl = 4'b1001; // slt for bltu
-                    else ALUControl = 4'b0011; // or, ori
+                    if (op == 7'b1100011) ALUControl = 5'b01001; // slt for bltu
+                    if (funct7 == 7'b0000001) ALUControl = 5'b10000; // rem
+                    else ALUControl = 5'b00011; // or, ori
                 end
                 3'b100: begin
-                    if (op == 7'b1100011) ALUControl = 4'b0101; // slt for blt
-                    else if (funct7 == 7'b0000001) ALUControl = 4'b1110; // div
-                    else ALUControl = 4'b0100; // xor, xori
+                    if (op == 7'b1100011) ALUControl = 5'b00101; // slt for blt
+                    else if (funct7 == 7'b0000001) ALUControl = 5'b01110; // div
+                    else ALUControl = 5'b00100; // xor, xori
                 end
                 3'b010: begin
-                        if (funct7 == 7'b0000001) ALUControl = 4'b1100;   // MULHSU 
-                        else ALUControl = 4'b0101; // slt, slti
+                        if (funct7 == 7'b0000001) ALUControl = 5'b01100;   // MULHSU 
+                        else ALUControl = 5'b00101; // slt, slti
                 end
                 3'b011: begin
-                    if (funct7 == 7'b0000001) ALUControl = 4'b1101;   // MULHU
-                    else ALUControl = 4'b1001; //sltu // mulhu 
+                    if (funct7 == 7'b0000001) ALUControl = 5'b01101;   // MULHU
+                    else ALUControl = 5'b01001; //sltu // mulhu 
                 end
 
                 3'b101: begin
-                    if (funct7[5]) ALUControl = 4'b0111; // sra/srai
-                    else if (funct7 == 7'b0000001) ALUControl = 4'b1111;
-                    else ALUControl = 4'b0110;// srl, srli
+                    if (funct7[5]) ALUControl = 5'b0111; // sra/srai
+                    else if (funct7 == 7'b0000001) ALUControl = 5'b01111;
+                    else ALUControl = 5'b00110;// srl, srli
                 end
                 3'b001: begin 
-                    if (funct7 == 7'b0000001) ALUControl = 4'b1011; // mulh 
-                    else ALUControl = 4'b1000; // sll  
+                    if (funct7 == 7'b0000001) ALUControl = 5'b01011; // mulh 
+                    else ALUControl = 5'b01000; // sll  
                 end
                 
 
-                default: ALUControl = 4'bxxx; // ???
+                default: ALUControl = 5'bxxx; // ???
                 endcase
             end
         endcase
