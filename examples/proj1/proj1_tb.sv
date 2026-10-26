@@ -1,7 +1,7 @@
 `timescale 10ns/10ns
 `include "top.sv"
 
-module mp4_tb;
+module proj1_tb;
 
     logic clk = 0;
     logic LED, RGB_R, RGB_G, RGB_B;
@@ -16,8 +16,8 @@ module mp4_tb;
     );
 
     initial begin
-        $dumpfile("mp4.vcd");
-        $dumpvars(0, mp4_tb);
+        $dumpfile("proj1.vcd");
+        $dumpvars(0, proj1_tb);
         #100000
         $finish;
     end
