@@ -8,7 +8,7 @@
     sub x7, x6, x4          # pc = 0x101C, x7 = 0x00000002
     sll x8, x4, x5          # pc = 0x1020, x8 = 0x0048D158
     ori x9, x8, 7           # pc = 0x1024, x9 = 0x0048D15F
-    auipc x10, 0x12345      # pc = 0x1028, x10 = 0x12345028
+    auipc x10, 0x12345      # pc = 0x1028, x10 = 0x12346028
     slt x11, x3, x4         # pc = 0x102C, x11 = 0x00000001
     sltu x12, x3, x4        # pc = 0x1030, x12 = 0x00000000
     jal x13, 0x28           # pc = 0x1034, x13 = 0x00001038
